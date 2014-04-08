@@ -1,14 +1,29 @@
 package ua.pp.a_i.ukrpost.app;
 
+import android.app.Dialog;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 
 public class ParcelsActivity extends ActionBarActivity {
+
+    void ProcessParcel(Parcel parcel){
+        if(parcel!=null){
+
+        }
+        else{
+            Dialog dialog=new Dialog(this);
+            dialog.setTitle("Помилка");
+            dialog.setContentView(R.layout.dialog);
+            dialog.show();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +45,7 @@ public class ParcelsActivity extends ActionBarActivity {
 
                 @Override
                 protected void onPostExecute(Parcel parcel) {
-                    super.onPostExecute(parcel);
+                    ProcessParcel(parcel);
                 }
             }.execute();
         }
