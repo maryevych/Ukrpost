@@ -1,9 +1,11 @@
 package ua.pp.a_i.ukrpost.app;
 
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 
 public class ParcelsActivity extends ActionBarActivity {
@@ -12,6 +14,33 @@ public class ParcelsActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        try{
+            new AsyncTask<String,Void,Parcel>() {
+                @Override
+                protected Parcel doInBackground(String... params) {
+                    Parcel parcel=null;
+                    try {
+                        parcel = Parcel.Get("hfg");
+                    }
+                    catch (Exception e){
+
+                    }
+                    return parcel;
+                }
+
+                @Override
+                protected void onPostExecute(Parcel parcel) {
+                    super.onPostExecute(parcel);
+                }
+            }.execute();
+        }
+        catch (Exception e){
+            Toast toast=new Toast(this);
+            toast.setGravity(1,getWindowManager().getDefaultDisplay().getWidth()/2,getWindowManager().getDefaultDisplay().getHeight()/2);
+            toast.setText(e.getMessage());
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.show();
+        }
     }
 
 

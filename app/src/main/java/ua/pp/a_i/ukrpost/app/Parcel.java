@@ -1,6 +1,7 @@
 package ua.pp.a_i.ukrpost.app;
 
 import android.os.AsyncTask;
+import android.util.Xml;
 
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
@@ -11,6 +12,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHttpRequest;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -77,39 +80,18 @@ public class Parcel {
 
     public static Parcel Get(final String barcode) throws Exception {
 
-        new AsyncTask<String, Void, String>() {
-            @Override
-            protected String doInBackground(String... prms) {
-                HttpRequest request=new HttpPost();
-                HttpClient client=new DefaultHttpClient();
-                HttpParams params=new BasicHttpParams();
-                params.setParameter("barcode",barcode);
-                params.setParameter("culture","uk");
-                params.setParameter("guid","fcc8d9e1-b6f9-438f-9ac8-b67ab44391dd");
-                request.setParams(params);
-                String result="";
-                try{
-                    HttpResponse response=client.execute(new HttpHost("http://services.ukrposhta.com/barcodestatistics/barcodestatistics.asmx/GetBarcodeInfo"),request);
-                    BufferedReader reader=new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-                    String line=reader.readLine();
-                    while (line!=null){
-                        result+=line;
-                        line=reader.readLine();
-                    }
-                }
-                catch (Exception e){
-
-
-                }
-                return result;
-            }
-
-            @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-            }
-        }.execute();
-        return null;
+        HttpRequest request=new HttpPost();
+        HttpClient client=new DefaultHttpClient();
+        HttpParams params=new BasicHttpParams();
+        params.setParameter("barcode",barcode);
+        params.setParameter("culture","uk");
+        params.setParameter("guid","fcc8d9e1-b6f9-438f-9ac8-b67ab44391dd");
+        request.setParams(params);
+            HttpResponse response=client.execute(new HttpHost("http://services.ukrposhta.com/barcodestatistics/barcodestatistics.asmx/GetBarcodeInfo"),request);
+            InputStream stream=response.getEntity().getContent();
+        XmlPullParser parser=Xml.newPullParser();
+        parser.setInput(stream,Xml.Encoding.UTF_8.name());
+        return new Parcel("","","",new Date());
     }
 
 }
